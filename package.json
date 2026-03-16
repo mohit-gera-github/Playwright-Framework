@@ -1,0 +1,34 @@
+{
+  "name": "opencart",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:master": "npx playwright test --grep @master",
+    "test:sanity": "npx playwright test --grep @sanity",
+    "test:regression": "npx playwright test --grep @regression",
+    "test:master:headed": "npx playwright test --grep @master --headed",
+    "test:sanity:headed": "npx playwright test --grep @sanity --headed",
+    "test:regression:headed": "npx playwright test --grep @regression --headed",
+    "test:master:debug": "npx playwright test --grep @master --debug",
+    "test:sanity:debug": "npx playwright test --grep @sanity --debug",
+    "test:regression:debug": "npx playwright test --grep @regression --debug",
+    "test:datadriven": "npx playwright test --grep @datadriven",
+    "test:datadriven:headed": "npx playwright test --grep @datadriven --headed"
+  },
+
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.4.0",
+    "allure-playwright": "^3.6.0"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.3.0",
+    "csv-parse": "^6.1.0",
+    "xlsx": "^0.18.5"
+  }
+}
