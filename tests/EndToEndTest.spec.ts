@@ -67,21 +67,21 @@ async function performRegistration(page: Page): Promise<string> {
     const registrationPage = new RegistrationPage(page);
 
     // Fill in random user details
-    await registrationPage.setFirstName(RandomDataUtil.getFirstName());
-    await registrationPage.setLastName(RandomDataUtil.getlastName());
+    await registrationPage.setFirstName(RandomDataUtil.getFirstname());
+    await registrationPage.setLastName(RandomDataUtil.getLastName());
 
     let email: string = RandomDataUtil.getEmail();
     await registrationPage.setEmail(email);
-    await registrationPage.setTelephone(RandomDataUtil.getPhoneNumber());
+    await registrationPage.setPhone(RandomDataUtil.getPhoneNumber());
 
     await registrationPage.setPassword("test123");
     await registrationPage.setConfirmPassword("test123");
 
-    await registrationPage.setPrivacyPolicy();  // Accept the privacy policy
+    await registrationPage.acceptPolicy();  // Accept the privacy policy
     await registrationPage.clickContinue();     // Submit the registration form
 
     // Validate that the registration was successful
-    const confirmationMsg = await registrationPage.getConfirmationMsg();
+    const confirmationMsg = await registrationPage.getConfirmationMessage();
     expect(confirmationMsg).toContain('Your Account Has Been Created!');
 
     return email; // Return the email for later use in login
@@ -94,11 +94,11 @@ async function performLogout(page: Page) {
     const logoutPage: LogoutPage = await myAccountPage.clickLogout();
 
     // Ensure the "Continue" button is visible
-    expect(await logoutPage.isContinueButtonVisible()).toBe(true);
+    expect(await logoutPage.iscontinueLinkExist()).toBe(true);
 
     // Click "Continue" and verify redirection to HomePage
     const homePage = await logoutPage.clickContinue();
-    expect(await homePage.isHomePageExists()).toBe(true);
+    expect(await homePage.isHomePageExist()).toBe(true);
 }
 
 
@@ -116,7 +116,7 @@ async function performLogin(page: Page, email: string) {
 
     // Verify login by checking My Account page
     const myAccountPage = new MyAccountPage(page);
-    expect(await myAccountPage.isMyAccountPageExists()).toBeTruthy();
+    expect(await myAccountPage.isMyAccountPageExist()).toBeTruthy();
 }
 
 
@@ -128,7 +128,7 @@ async function addProductToCart(page: Page) {
     const productName: string = config.productName;
     const productQuantity: string = config.productQuantity;
 
-    await homePage.enterProductName(productName);
+    await homePage.setProductName(productName);
     await homePage.clickSearch();  // Click on search button
 
     const searchResultsPage = new SearchResultsPage(page);

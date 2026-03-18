@@ -1,5 +1,5 @@
 import { Page, expect, test } from '@playwright/test';
-import { RegisterPage } from '../pages/RegisterPage';
+import { RegistrationPage } from '../pages/RegistrationPage';
 import { TestConfig } from '../test.config';
 import { HomePage } from '../pages/HomePage';
 import { DataProvide } from '../utils/dataProvider';
@@ -7,13 +7,13 @@ import { RandomDataUtil } from '../utils/randomDataGenerator';
 
 
 let homePage: HomePage;
-let registerPage: RegisterPage;
+let registrationPage: RegistrationPage;
 
 test.beforeEach(async ({ page }) => {
     const config = new TestConfig();
     await page.goto(config.appUrl);
     homePage = new HomePage(page);
-    registerPage = new RegisterPage(page);
+    registrationPage = new RegistrationPage(page);
 })
 
 test.afterEach(async ({ page }) => {
@@ -37,8 +37,8 @@ test('Account Registration Test  @master @sanity @regression', async () => {
         phone: RandomDataUtil.getPhoneNumber(),
         password: RandomDataUtil.getRandomPassword(12)
     };
-    await registerPage.registerAccount(userDetails);
-    const confirmationMessage = await registerPage.getConfirmationMessage();
+    await registrationPage.registerAccount(userDetails);
+    const confirmationMessage = await registrationPage.getConfirmationMessage();
 
     // Assertion
     expect(confirmationMessage).toContain('Your Account Has Been Created!');
