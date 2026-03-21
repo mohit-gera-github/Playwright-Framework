@@ -14,7 +14,11 @@
     "test:sanity:debug": "npx playwright test --grep @sanity --debug",
     "test:regression:debug": "npx playwright test --grep @regression --debug",
     "test:datadriven": "npx playwright test --grep @datadriven",
-    "test:datadriven:headed": "npx playwright test --grep @datadriven --headed"
+    "test:datadriven:headed": "npx playwright test --grep @datadriven --headed",
+    "test:master:failed": "npx playwright test --grep @master --last-failed",
+    "test:sanity:failed": "npx playwright test --grep @sanity --last-failed",
+    "test:regression:failed": "npx playwright test --grep @regression --last-failed",
+    "test:datadriven:failed": "npx playwright test --grep @datadriven --last-failed"
   },
 
   "keywords": [],
