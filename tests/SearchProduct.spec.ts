@@ -39,7 +39,7 @@ test('Product search test @master @regression', async () => {
   const productName = config.productName;
 
   // Step 2 & 3: Enter product name and click Search
-  await homePage.enterProductName(productName);
+  await homePage.setProductName(productName);
   await homePage.clickSearch();
 
   // Step 4: Verify that the search results page is displayed
