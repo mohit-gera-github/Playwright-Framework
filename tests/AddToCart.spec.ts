@@ -42,7 +42,7 @@ test.afterEach(async ({ page }) => {
 
 test('Add product to cart test @master @regression', async ({ page }) => {
   // Step 2: Enter product name in search box
-  await homePage.enterProductName(config.productName);
+  await homePage.setProductName(config.productName);
 
   // Step 3: Click the search button
   await homePage.clickSearch();
