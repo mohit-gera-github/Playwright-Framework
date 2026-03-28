@@ -1,4 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
+import dotenv from 'dotenv';
+import path from 'path';
 
 /**
  * Read environment variables from file.
@@ -11,6 +13,13 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
+
+// Why? → Same as test.config.ts — loads correct env file
+const env = process.env.ENV || 'qa';
+dotenv.config({
+    path: path.resolve(__dirname, `config/${env}.env`)
+});
+
 export default defineConfig({
   timeout: 30 * 1000, //30000 ms(30 secs)
   testDir: './tests',
@@ -25,6 +34,9 @@ export default defineConfig({
     ['dot']
   ],
   use: {
+     // Why? → baseURL is now dynamic based on environment
+    //        Tests can use relative URLs like page.goto('/login')
+    baseURL: process.env.APP_URL,
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
