@@ -15,10 +15,10 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { TestConfig } from '../test.config';
-import { HomePage } from '../pages/HomePage';
-import { SearchResultsPage } from '../pages/SearchResultsPage';
-import { ProductPage } from '../pages/ProductPage';
+import { TestConfig } from '../../test.config';
+import { HomePage } from '../../pages/HomePage';
+import { SearchResultsPage } from '../../pages/SearchResultsPage';
+import { ProductPage } from '../../pages/ProductPage';
 
 // Shared instances
 let config: TestConfig;
@@ -28,7 +28,7 @@ let productPage: ProductPage;
 
 test.beforeEach(async ({ page }) => {
   config = new TestConfig(); // Load test configuration
-  await page.goto(config.appUrl); // Step 1: Open application URL
+  await page.goto(config.appUrl_QA); // Step 1: Open application URL
 
   // Initialize page objects
   homePage = new HomePage(page);
@@ -40,7 +40,7 @@ test.afterEach(async ({ page }) => {
   await page.close(); // Optional cleanup
 });
 
-test('Add product to cart test @master @regression', async ({ page }) => {
+test('Add product to cart test @smoke @master @regression', async ({ page }) => {
   // Step 2: Enter product name in search box
   await homePage.setProductName(config.productName);
 

@@ -14,24 +14,24 @@
  */
 
 import { test, expect, Page } from '@playwright/test';
-import { RegistrationPage } from '../pages/RegistrationPage';
-import { HomePage } from '../pages/HomePage';
-import { RandomDataUtil } from '../utils/randomDataGenerator';
-import { TestConfig } from '../test.config';
-import { LogoutPage } from '../pages/LogoutPage';
-import { LoginPage } from '../pages/LoginPage';
-import { MyAccountPage } from '../pages/MyAccountPage';
-import { SearchResultsPage } from '../pages/SearchResultsPage';
-import { ProductPage } from '../pages/ProductPage';
-import { ShoppingCartPage } from '../pages/ShoppingCartPage';
-import { CheckoutPage } from '../pages/CheckoutPage';
+import { RegistrationPage } from '../../pages/RegistrationPage';
+import { HomePage } from '../../pages/HomePage';
+import { RandomDataUtil } from '../../utils/randomDataGenerator';
+import { TestConfig } from '../../test.config';
+import { LogoutPage } from '../../pages/LogoutPage';
+import { LoginPage } from '../../pages/LoginPage';
+import { MyAccountPage } from '../../pages/MyAccountPage';
+import { SearchResultsPage } from '../../pages/SearchResultsPage';
+import { ProductPage } from '../../pages/ProductPage';
+import { ShoppingCartPage } from '../../pages/ShoppingCartPage';
+import { CheckoutPage } from '../../pages/CheckoutPage';
 
 // This is the main test block that runs the entire flow
 test('execute end-to-end test flow @end-to-end', async ({ page }) => {
     const config = new TestConfig();
 
     // Navigate to the application's home page
-    await page.goto(config.appUrl);
+    await page.goto(config.appUrl_QA);
 
     // Step 1: Register a new account and capture the generated email
     let registeredEmail: string = await performRegistration(page);
@@ -105,7 +105,7 @@ async function performLogout(page: Page) {
 // Function to log in using the registered email
 async function performLogin(page: Page, email: string) {
     const config = new TestConfig();
-    await page.goto(config.appUrl);  // Reload home page
+    await page.goto(config.appUrl_QA);  // Reload home page
 
     const homePage = new HomePage(page);
     await homePage.clickMyAccount();

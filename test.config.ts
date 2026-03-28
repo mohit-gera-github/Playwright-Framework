@@ -1,5 +1,7 @@
 export class TestConfig {
-    appUrl = "https://naveenautomationlabs.com/opencart/"
+    appUrl_QA = "https://naveenautomationlabs.com/opencart/"
+    appUrl_UAT = "https://naveenautomationlabs.com/opencart/"
+    appUrl_PROD = "https://naveenautomationlabs.com/opencart/"
     // https://tutorialsninja.com/demo/
 
     // Valid Login credentials

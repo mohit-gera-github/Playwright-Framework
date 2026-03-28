@@ -1,10 +1,10 @@
 import { Page, expect, test } from '@playwright/test';
-import { HomePage } from '../pages/HomePage';
-import { MyAccountPage } from '../pages/MyAccountPage';
-import { LoginPage } from '../pages/LoginPage';
-import { TestConfig } from '../test.config';
-import { DataProvide } from '../utils/dataProvider';
-import { LogoutPage } from '../pages/LogoutPage';
+import { HomePage } from '../../pages/HomePage';
+import { MyAccountPage } from '../../pages/MyAccountPage';
+import { LoginPage } from '../../pages/LoginPage';
+import { TestConfig } from '../../test.config';
+import { DataProvide } from '../../utils/dataProvider';
+import { LogoutPage } from '../../pages/LogoutPage';
 
 const jsonPath = './testdata/logindata.json';
 const csvPath = './testData/logindata.csv';

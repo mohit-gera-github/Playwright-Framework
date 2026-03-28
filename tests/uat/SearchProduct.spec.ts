@@ -11,9 +11,9 @@
  */
 
 import { test, expect } from '@playwright/test';
-import { HomePage } from '../pages/HomePage';
-import { SearchResultsPage } from '../pages/SearchResultsPage';
-import { TestConfig } from '../test.config';
+import { HomePage } from '../../pages/HomePage';
+import { SearchResultsPage } from '../../pages/SearchResultsPage';
+import { TestConfig } from '../../test.config';
 
 // Declare reusable variables
 let config: TestConfig;
@@ -23,7 +23,7 @@ let searchResultsPage: SearchResultsPage;
 // Playwright hook - runs before each test
 test.beforeEach(async ({ page }) => {
   config = new TestConfig(); // Load configuration values like URL and product name
-  await page.goto(config.appUrl); // Step 1: Navigate to the application
+  await page.goto(config.appUrl_UAT); // Step 1: Navigate to the application
 
   // Initialize page objects
   homePage = new HomePage(page);

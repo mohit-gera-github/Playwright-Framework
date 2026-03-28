@@ -1,9 +1,9 @@
 import {test ,expect} from '@playwright/test';
-import { HomePage } from '../pages/HomePage';
-import { MyAccountPage } from '../pages/MyAccountPage';
-import { LoginPage } from '../pages/LoginPage';
-import { LogoutPage } from '../pages/LogoutPage';
-import { TestConfig } from '../test.config';    
+import { HomePage } from '../../pages/HomePage';
+import { MyAccountPage } from '../../pages/MyAccountPage';
+import { LoginPage } from '../../pages/LoginPage';
+import { LogoutPage } from '../../pages/LogoutPage';
+import { TestConfig } from '../../test.config';    
 import { verify } from 'node:crypto';
 
 let config: TestConfig;
@@ -15,7 +15,7 @@ let logoutPage: LogoutPage;
 test.beforeEach(async ({ page }) => {
     // navigate to page 
     config = new TestConfig();
-    await page.goto(config.appUrl); 
+    await page.goto(config.appUrl_UAT); 
 
     // Initilize Pages 
     homePage = new HomePage(page);
@@ -27,7 +27,7 @@ test.afterEach(async ({ page }) => {
     await page.close();
 })
 
-test('Logout Test @master @regression',async()=> {
+test('Logout Test @master @smoke @regression',async()=> {
     // Go to My Account and click login
     await homePage.clickMyAccount();
     await homePage.clickLogin();

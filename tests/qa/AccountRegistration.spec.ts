@@ -1,9 +1,9 @@
 import { Page, expect, test } from '@playwright/test';
-import { RegistrationPage } from '../pages/RegistrationPage';
-import { TestConfig } from '../test.config';
-import { HomePage } from '../pages/HomePage';
-import { DataProvide } from '../utils/dataProvider';
-import { RandomDataUtil } from '../utils/randomDataGenerator';
+import { RegistrationPage } from '../../pages/RegistrationPage';
+import { TestConfig } from '../../test.config';
+import { HomePage } from '../../pages/HomePage';
+import { DataProvide } from '../../utils/dataProvider';
+import { RandomDataUtil } from '../../utils/randomDataGenerator';
 
 
 let homePage: HomePage;
@@ -11,7 +11,7 @@ let registrationPage: RegistrationPage;
 
 test.beforeEach(async ({ page }) => {
     const config = new TestConfig();
-    await page.goto(config.appUrl);
+    await page.goto(config.appUrl_QA);
     homePage = new HomePage(page);
     registrationPage = new RegistrationPage(page);
 })
