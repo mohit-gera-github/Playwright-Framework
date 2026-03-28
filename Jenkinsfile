@@ -1,177 +1,258 @@
 pipeline {
-    agent any
-    // Why agent any?
-    // → Run on any available Jenkins node/machine
 
+    /******************************************************************
+     * AGENT
+     * Runs on any available Jenkins node
+     ******************************************************************/
+    agent any
+
+
+    /******************************************************************
+     * PARAMETERS (Visible in "Build with Parameters")
+     ******************************************************************/
     parameters {
+
         choice(
             name: 'ENV',
             choices: ['qa', 'uat', 'prod'],
-            description: 'Select Environment to run tests on'
-            // Why? → User picks environment from Jenkins UI
-            //        Pipeline automatically picks correct credentials
+            description: 'Select target environment'
         )
+
         choice(
             name: 'TEST_SUITE',
-            choices: ['sanity', 'master', 'regression', 'datadriven'],
-            description: 'Select Test Suite to run'
-            // Why? → User picks which group of tests to run
+            choices: ['sanity', 'master', 'regression', 'datadriven' , 'smoke'],
+            description: 'Select test suite to execute'
         )
+
         booleanParam(
             name: 'RERUN_FAILED',
             defaultValue: false,
-            description: 'Check to rerun only last failed tests'
-            // Why? → If 2 out of 9 tests fail
-            //        Rerun only those 2 instead of all 9
+            description: 'Re-run only failed tests from previous execution'
         )
+
         booleanParam(
-            name: 'HEADLESS',
-            defaultValue: true,
-            description: 'Run tests in headless mode'
-            // Why? → Server has no screen
-            //        Headless = runs without visible browser
+            name: 'PARALLEL_EXECUTION',
+            defaultValue: false,
+            description: 'Run tests in parallel across browsers'
         )
     }
 
+
+    /******************************************************************
+     * ENVIRONMENT VARIABLES
+     ******************************************************************/
+    environment {
+        NODE_ENV = 'ci'
+    }
+
+
+    /******************************************************************
+     * STAGES
+     ******************************************************************/
     stages {
 
-        stage('Checkout') {
-            // Why this stage?
-            // → Downloads latest code from GitHub
-            // → Always runs on fresh latest code
-            // → No manual git pull needed
+        /******************** CHECKOUT CODE ****************************/
+        stage('Checkout Source Code') {
             steps {
+                // Always pull fresh code from GitHub
                 git branch: 'main',
                     url: 'https://github.com/mohit-gera-github/Playwright-Framework.git'
             }
         }
 
+
+        /******************** INSTALL DEPENDENCIES *********************/
         stage('Install Dependencies') {
-            // Why this stage?
-            // → AWS server is fresh environment
-            // → node_modules is NOT in GitHub (.gitignore)
-            // → Must install all packages before running tests
             steps {
-                sh 'npm install'
-                // Why allure-playwright?
-                // → Generates Allure test results during test run
-                sh 'npm install -D allure-playwright'
-                // Why -g allure-commandline?
-                // → CLI tool to generate HTML report from results
-                sh 'npm install -g allure-commandline --force'
+                sh '''
+                    npm install
+                    npm install -D allure-playwright
+                    npm install -g allure-commandline --force
+                '''
             }
         }
 
-        stage('Setup ENV File') {
-            // Why this stage?
-            // → Fetches correct ENV file from Jenkins credentials
-            // → Copies to config/ folder in workspace
-            // → test.config.ts reads credentials from there
+
+        /******************** SETUP ENV FILE ***************************/
+        stage('Setup Environment File') {
             steps {
                 script {
-                    // Why dynamic credId?
-                    // → qa   → fetches qa-env-file from Jenkins
-                    // → uat  → fetches uat-env-file from Jenkins
-                    // → prod → fetches prod-env-file from Jenkins
+
+                    // Dynamically select credential ID
+                    // qa   -> qa-env-file
+                    // uat  -> uat-env-file
+                    // prod -> prod-env-file
                     def credId = "${params.ENV}-env-file"
 
                     withCredentials([
                         file(credentialsId: credId, variable: 'ENV_FILE')
                     ]) {
-                        // Why mkdir -p?
-                        // → config/ folder may not exist in fresh checkout
-                        // → -p means don't error if already exists
-                        sh "mkdir -p config"
-
-                        // Why cp?
-                        // → Copy env file from Jenkins secure storage
-                        //   to workspace so test.config.ts can read it
-                        sh "cp \$ENV_FILE config/${params.ENV}.env"
+                        sh '''
+                            mkdir -p config
+                            cp $ENV_FILE config/${ENV}.env
+                        '''
                     }
                 }
             }
         }
 
+
+        /******************** INSTALL PLAYWRIGHT BROWSERS **************/
         stage('Install Playwright Browsers') {
-            // Why this stage?
-            // → Playwright needs browsers to run tests
-            // → Chrome, Firefox etc must be installed on server
-            // → --with-deps installs system dependencies too
             steps {
                 sh 'npx playwright install --with-deps'
             }
         }
 
-        stage('Run Tests') {
-            // Why this stage?
-            // → Actually runs the Playwright tests!
-            // → Uses parameters to decide what to run
+
+        /******************** RUN TESTS ********************************/
+        stage('Execute Tests') {
             steps {
                 script {
+
+                    /************* SCENARIO 1: RERUN FAILED ****************/
                     if (params.RERUN_FAILED == true) {
-                        // Why --last-failed?
-                        // → Reads test-results/.last-run.json
-                        // → Runs only previously failed tests
-                        // → Saves time when only few tests fail
-                        sh "cross-env ENV=${params.ENV} npx playwright test --last-failed"
+
+                        sh """
+                            cross-env ENV=${params.ENV} \
+                            npx playwright test --last-failed
+                        """
+
                     } else {
-                        // Why npm run test:ENV:SUITE?
-                        // → e.g. npm run test:qa:sanity
-                        // → cross-env sets ENV variable
-                        // → test.config.ts reads correct .env file
-                        // → Tests run on correct environment
-                        sh "npm run test:${params.ENV}:${params.TEST_SUITE}"
+
+                        /************* SCENARIO 2: PARALLEL EXECUTION ********/
+                        if (params.PARALLEL_EXECUTION == true) {
+
+                            parallel(
+
+                                chrome: {
+                                    sh "npm run test:${params.ENV}:${params.TEST_SUITE} -- --project=chromium"
+                                },
+
+                                firefox: {
+                                    sh "npm run test:${params.ENV}:${params.TEST_SUITE} -- --project=firefox"
+                                },
+
+                                safari: {
+                                    sh "npm run test:${params.ENV}:${params.TEST_SUITE} -- --project=webkit"
+                                }
+                            )
+
+                        } else {
+
+                            /************* SCENARIO 3: NORMAL RUN **************/
+                            sh "npm run test:${params.ENV}:${params.TEST_SUITE}"
+                        }
                     }
                 }
             }
         }
 
+
+        /******************** GENERATE ALLURE REPORT *******************/
         stage('Generate Allure Report') {
-            // Why this stage?
-            // → Converts raw JSON results to beautiful HTML report
-            // → Team can see what passed / failed with details
-            // → --clean removes old report before generating new
             steps {
                 sh 'allure generate ./allure-results --clean -o ./allure-report'
             }
         }
+
+
+        /******************** ZIP REPORT FOR EMAIL *********************/
+        stage('Zip Allure Report') {
+            steps {
+                sh 'zip -r allure-report.zip allure-report'
+            }
+        }
     }
 
-    post {
-        // Why post block?
-        // → Runs AFTER all stages complete
-        // → Even if tests FAIL - report is still generated
-        // → Team always gets the report
 
+    /******************************************************************
+     * POST ACTIONS (Runs even if tests fail)
+     ******************************************************************/
+    post {
+
+        /******************** ALWAYS **********************************/
         always {
-            // Why archiveArtifacts?
-            // → Saves test result files in Jenkins
-            // → Can download later for debugging
-            // → allowEmptyArchive = don't fail if no files
+
+            // Store test artifacts in Jenkins
             archiveArtifacts artifacts: 'test-results/**/*',
                              allowEmptyArchive: true
 
-            // Why allure here?
-            // → Publishes Allure HTML report in Jenkins UI
-            // → Accessible from build page
-            // → Team can view detailed results anytime
+            // Publish Allure report in Jenkins UI
             allure includeProperties: false,
                    jdk: '',
                    results: [[path: 'allure-results']]
         }
 
+
+        /******************** SUCCESS *********************************/
         success {
-            // Why success block?
-            // → Runs only when ALL tests pass
-            // → Can add email/Slack notification here
-            echo "✅ Tests PASSED on ${params.ENV} environment!"
+
+            /******** EMAIL NOTIFICATION ********/
+            emailext(
+                subject: "✅ Tests PASSED | ${params.ENV}",
+                body: """
+                Hello Team,
+
+                All tests passed successfully.
+
+                Environment : ${params.ENV}
+                Test Suite : ${params.TEST_SUITE}
+
+                Jenkins Build:
+                ${env.BUILD_URL}
+
+                Regards,
+                Automation CI
+                """,
+                to: "qa-team@company.com",
+                attachmentsPattern: 'allure-report.zip'
+            )
+
+            /******** SLACK NOTIFICATION ********/
+            // Uncomment when Slack plugin is configured
+            /*
+            slackSend(
+                channel: '#automation-reports',
+                color: 'good',
+                message: "✅ Tests PASSED | ${params.ENV} | ${env.BUILD_URL}"
+            )
+            */
         }
 
+
+        /******************** FAILURE *********************************/
         failure {
-            // Why failure block?
-            // → Runs only when tests FAIL
-            // → Can notify team here
-            echo "❌ Tests FAILED on ${params.ENV} environment!"
+
+            /******** EMAIL NOTIFICATION ********/
+            emailext(
+                subject: "❌ Tests FAILED | ${params.ENV}",
+                body: """
+                Hello Team,
+
+                Some tests have failed.
+
+                Environment : ${params.ENV}
+                Test Suite : ${params.TEST_SUITE}
+
+                Jenkins Build:
+                ${env.BUILD_URL}
+
+                Please find the attached Allure report.
+                """,
+                to: "qa-team@company.com",
+                attachmentsPattern: 'allure-report.zip'
+            )
+
+            /******** SLACK NOTIFICATION ********/
+            // Uncomment when Slack plugin is configured
+            /*
+            slackSend(
+                channel: '#automation-alerts',
+                color: 'danger',
+                message: "❌ Tests FAILED | ${params.ENV} | ${env.BUILD_URL}"
+            )
+            */
         }
     }
 }
