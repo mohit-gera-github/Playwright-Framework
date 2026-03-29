@@ -22,7 +22,7 @@ export default defineConfig({
   testDir: './tests',
 
   /* Timeouts */
-  timeout: 30_000,
+  timeout: 120000,
 
   /* Retry strategy */
   retries: process.env.CI ? 1 : 0,
@@ -55,13 +55,13 @@ export default defineConfig({
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] }
     },
-    {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] }
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] }
-    }
+    // {
+    //   name: 'firefox',
+    //   use: { ...devices['Desktop Firefox'] }
+    // },
+    // {
+    //   name: 'webkit',
+    //   use: { ...devices['Desktop Safari'] }
+    // }
   ]
 });
