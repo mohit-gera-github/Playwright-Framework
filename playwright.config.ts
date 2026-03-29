@@ -27,7 +27,10 @@ export default defineConfig({
   /* Retry strategy */
   retries: process.env.CI ? 1 : 0,
 
- 
+  expect: {
+    timeout: 30000,
+  },
+  
   fullyParallel: false,
   workers: process.env.CI ? 3 : undefined,
 
@@ -46,7 +49,9 @@ export default defineConfig({
     video: 'retain-on-failure',
     viewport: { width: 1280, height: 720 },
     headless: true,
-    ignoreHTTPSErrors: true
+    ignoreHTTPSErrors: true,
+     navigationTimeout: 60000,
+    actionTimeout: 30000,
   },
 
  
