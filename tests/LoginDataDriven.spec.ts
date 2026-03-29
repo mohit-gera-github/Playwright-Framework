@@ -7,7 +7,7 @@ import { DataProvide } from '../utils/dataProvider';
 import { LogoutPage } from '../pages/LogoutPage';
 
 const jsonPath = './testdata/logindata.json';
-const csvPath = './testData/logindata.csv';
+const csvPath = './testdata/logindata.csv';
 const jsonTestData = DataProvide.getTestDataFromJson(jsonPath);
 const csvTestData = DataProvide.getTestDataFromCsv(csvPath);
 
