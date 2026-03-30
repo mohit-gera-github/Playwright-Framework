@@ -31,8 +31,8 @@ export default defineConfig({
     timeout: 30000,
   },
   
-  fullyParallel: false,
-  workers: process.env.CI ? 3 : undefined,
+  fullyParallel: true,
+  workers: process.env.CI ? 3 : 2,
 
   /* Reporting */
   reporter: [
