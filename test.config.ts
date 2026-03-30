@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-// new comment 
+
 
 // Why? → Reads ENV variable to know which environment to load
 //        Defaults to 'qa' if not specified
