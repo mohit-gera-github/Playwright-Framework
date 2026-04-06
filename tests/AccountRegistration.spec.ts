@@ -49,7 +49,7 @@ test('Account Registration Test2 @master @sanity @regression', async ({ page }) 
     expect(confirmationMessage).toContain('Your Account Has Been Created!');
 });
 
-test('Account Registration Test3 @master @sanity @regression', async ({ page }) => {
+test('Account Registration Test3 @master @smoke @regression', async ({ page }) => {
     const homePage = new HomePage(page);
     const registrationPage = new RegistrationPage(page);
 
