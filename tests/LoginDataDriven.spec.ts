@@ -12,7 +12,7 @@ const jsonTestData = DataProvide.getTestDataFromJson(jsonPath);
 const csvTestData = DataProvide.getTestDataFromCsv(csvPath);
 
 for (const data of jsonTestData) {
-    test(`Login Test (JSON) with ${data.email} and ${data.password} Status : ${data.testName} @datadriven @regression`, async ({ page }) => {
+    test(`Login Test (JSON) with ${data.email} and ${data.password} Status : ${data.testName} @regression`, async ({ page }) => {
         const config = new TestConfig();
         await page.goto(config.appUrl);
 

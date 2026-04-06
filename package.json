@@ -11,7 +11,6 @@
     "test:sanity":     "npx playwright test --grep @sanity",
     "test:smoke":      "npx playwright test --grep @smoke",
     "test:regression": "npx playwright test --grep @regression",
-    "test:datadriven": "npx playwright test --grep @datadriven",
 
     "test:master:headed":     "npx playwright test --grep @master --headed",
     "test:sanity:headed":     "npx playwright test --grep @sanity --headed",
@@ -27,25 +26,22 @@
     "test:sanity:failed":     "npx playwright test --grep @sanity --last-failed",
     "test:smoke:failed":      "npx playwright test --grep @smoke --last-failed",
     "test:regression:failed": "npx playwright test --grep @regression --last-failed",
-    "test:datadriven:failed": "npx playwright test --grep @datadriven --last-failed",
 
     "test:qa:master":          "cross-env ENV=qa npx playwright test --grep @master",
     "test:qa:sanity":          "cross-env ENV=qa npx playwright test --grep @sanity",
     "test:qa:smoke":           "cross-env ENV=qa npx playwright test --grep @smoke",
     "test:qa:regression":      "cross-env ENV=qa npx playwright test --grep @regression",
-    "test:qa:datadriven":      "cross-env ENV=qa npx playwright test --grep @datadriven",
 
     "test:uat:master":         "cross-env ENV=uat npx playwright test --grep @master",
     "test:uat:sanity":         "cross-env ENV=uat npx playwright test --grep @sanity",
     "test:uat:smoke":          "cross-env ENV=uat npx playwright test --grep @smoke",
     "test:uat:regression":     "cross-env ENV=uat npx playwright test --grep @regression",
-    "test:uat:datadriven":     "cross-env ENV=uat npx playwright test --grep @datadriven",
 
     "test:prod:master":        "cross-env ENV=prod npx playwright test --grep @master",
     "test:prod:sanity":        "cross-env ENV=prod npx playwright test --grep @sanity",
     "test:prod:smoke":         "cross-env ENV=prod npx playwright test --grep @smoke",
-    "test:prod:regression":    "cross-env ENV=prod npx playwright test --grep @regression",
-    "test:prod:datadriven":    "cross-env ENV=prod npx playwright test --grep @datadriven"
+    "test:prod:regression":    "cross-env ENV=prod npx playwright test --grep @regression"
+
 
   },
   "keywords": [],

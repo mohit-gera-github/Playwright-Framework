@@ -26,7 +26,7 @@ test.afterEach(async ({ page }) => {
     await page.close();
 })
 
-test('Login and Logout Test @smoke @master @sanity @regression', async () => {
+test('Login and Logout Test @smoke @master @sanity', async () => {
 
     // Go to My Account and click login
     await homePage.clickMyAccount();

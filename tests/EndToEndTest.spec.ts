@@ -27,7 +27,7 @@ import { ShoppingCartPage } from '../pages/ShoppingCartPage';
 import { CheckoutPage } from '../pages/CheckoutPage';
 
 // This is the main test block that runs the entire flow
-test('execute end-to-end test flow @end-to-end', async ({ page }) => {
+test('execute end-to-end test flow @regression', async ({ page }) => {
     const config = new TestConfig();
 
     // Navigate to the application's home page
